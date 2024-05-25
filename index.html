@@ -93,6 +93,11 @@
             displayFiles(helperFiles);
             fileList.classList.remove('hidden');
         });
+
+        // Speak welcome message on page load
+        window.addEventListener('load', () => {
+            speak('Please hover on the screen and select either. For the Visually Challenged. Or. For the Helpers of the Visually Challenged.');
+        });
     </script>
 </body>
 </html>
