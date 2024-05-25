@@ -9,59 +9,56 @@
             font-family: Arial, sans-serif;
         }
         .container {
-            width: 550px;
+            width: 80%;
             margin: auto;
             text-align: center;
         }
-        .frame {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin-top: 20px;
-        }
-        .file-label {
-            padding: 20px;
+        .mode-box, .file-box {
+            padding: 40px;
+            margin: 20px;
             border: 2px solid #ccc;
-            border-radius: 5px;
+            border-radius: 10px;
             cursor: pointer;
             background-color: #f9f9f9;
+            font-size: 20px;
         }
-        .file-label:hover {
+        .mode-box:hover, .file-box:hover {
             background-color: #e0e0e0;
+        }
+        .hidden {
+            display: none;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>File Runner</h1>
-        <select id="modeDropdown">
-            <option value="">Select Mode</option>
-            <option value="visuallyChallenged">For the Visually Challenged</option>
-            <option value="helper">For the Helper of the Visually Challenged</option>
-        </select>
-        <div id="fileList" class="frame"></div>
+        <div id="modeSelection">
+            <div class="mode-box" id="visuallyChallengedBox">For the Visually Challenged</div>
+            <div class="mode-box" id="helperBox">For the Helper of the Visually Challenged</div>
+        </div>
+        <div id="fileList" class="hidden"></div>
     </div>
 
     <script>
         const visuallyChallengedFiles = [
-            "cruch",
-            "highknee",
-            "kneetoelbow",
-            "pushup",
-            "sidebend"
+            { name: "cruch", path: "C:/Users/sc/OneDrive/Desktop/exercise/ai exercises/Final/cruch.py" },
+            { name: "highknee", path: "C:/Users/sc/OneDrive/Desktop/exercise/ai exercises/Final/highknee.py" },
+            { name: "kneetoelbow", path: "C:/Users/sc/OneDrive/Desktop/exercise/ai exercises/Final/kneetoelbow.py" },
+            { name: "pushup", path: "C:/Users/sc/OneDrive/Desktop/exercise/ai exercises/Final/pushup.py" },
+            { name: "sidebend", path: "C:/Users/sc/OneDrive/Desktop/exercise/ai exercises/Final/sidebend.py" }
         ];
 
         const helperFiles = [
-            "curls2",
-            "jj",
-            "lunges",
-            "sidecrunch",
-            "situps",
-            "toetouch",
-            "wipers"
+            { name: "curls2", path: "C:/Users/sc/OneDrive/Desktop/exercise/ai exercises/Final/curls2.py" },
+            { name: "jj", path: "C:/Users/sc/OneDrive/Desktop/exercise/ai exercises/Final/jj.py" },
+            { name: "lunges", path: "C:/Users/sc/OneDrive/Desktop/exercise/ai exercises/Final/lunges.py" },
+            { name: "sidecrunch", path: "C:/Users/sc/OneDrive/Desktop/exercise/ai exercises/Final/sidecrunch.py" },
+            { name: "situps", path: "C:/Users/sc/OneDrive/Desktop/exercise/ai exercises/Final/situps.py" },
+            { name: "toetouch", path: "C:/Users/sc/OneDrive/Desktop/exercise/ai exercises/Final/toetouch.py" },
+            { name: "wipers", path: "C:/Users/sc/OneDrive/Desktop/exercise/ai exercises/Final/wipers.py" }
         ];
 
-        const modeDropdown = document.getElementById('modeDropdown');
+        const modeSelection = document.getElementById('modeSelection');
         const fileList = document.getElementById('fileList');
 
         function speak(text) {
@@ -72,25 +69,29 @@
         function displayFiles(files) {
             fileList.innerHTML = '';
             files.forEach(file => {
-                const label = document.createElement('div');
-                label.className = 'file-label';
-                label.innerText = file;
-                label.addEventListener('mouseenter', () => speak(file));
-                label.addEventListener('click', () => alert(`Running file: ${file}.py`));  // Simulated file execution
-                fileList.appendChild(label);
+                const fileBox = document.createElement('div');
+                fileBox.className = 'file-box';
+                fileBox.innerText = file.name;
+                fileBox.setAttribute('data-path', file.path);
+                fileBox.addEventListener('mouseenter', () => speak(file.name));
+                fileBox.addEventListener('click', () => alert(`Running file: ${file.path}`));  // Simulated file execution
+                fileList.appendChild(fileBox);
             });
         }
 
-        modeDropdown.addEventListener('change', () => {
-            const selectedMode = modeDropdown.value;
-            speak(selectedMode === 'visuallyChallenged' ? 'For the Visually Challenged' : 'For the Helper of the Visually Challenged');
-            if (selectedMode === 'visuallyChallenged') {
-                displayFiles(visuallyChallengedFiles);
-            } else if (selectedMode === 'helper') {
-                displayFiles(helperFiles);
-            } else {
-                fileList.innerHTML = '';
-            }
+        document.getElementById('visuallyChallengedBox').addEventListener('mouseenter', () => speak('For the Visually Challenged'));
+        document.getElementById('helperBox').addEventListener('mouseenter', () => speak('For the Helper of the Visually Challenged'));
+
+        document.getElementById('visuallyChallengedBox').addEventListener('click', () => {
+            modeSelection.classList.add('hidden');
+            displayFiles(visuallyChallengedFiles);
+            fileList.classList.remove('hidden');
+        });
+
+        document.getElementById('helperBox').addEventListener('click', () => {
+            modeSelection.classList.add('hidden');
+            displayFiles(helperFiles);
+            fileList.classList.remove('hidden');
         });
     </script>
 </body>
